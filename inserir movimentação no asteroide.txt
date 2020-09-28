@@ -1,0 +1,4 @@
+Vector2 thrust = new Vector2(Random.Range(-maxThrust, maxThrust), Random.Range(-maxThrust, maxThrust));
+        float torque = Random.Range(-maxTorque, maxTorque);
+        rb2d.AddForce(thrust);
+        rb2d.AddTorque(torque);
