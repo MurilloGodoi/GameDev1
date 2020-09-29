@@ -40,7 +40,7 @@ public class ShipController : MonoBehaviour
     void Update()
     {
         CheckCamLimits();
-        player.SendMessage(ammunitioncount);
+        player.SendMessage(ammunitioncount);    
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
@@ -48,6 +48,7 @@ public class ShipController : MonoBehaviour
             {   // instanciar nova bala
                 GameObject bulletGo = Instantiate(bulletPrefab, fireSpotTrans.position, fireSpotTrans.rotation);
                 bulletGo.tag = gameObject.tag;
+                Destroy(bulletGo, 5.0f);
                 ammunitioncount--;
                 ammunitioncountText.text = "Balas" + ammunitioncount;
             }
@@ -79,31 +80,54 @@ public class ShipController : MonoBehaviour
         GetComponent<Collider2D>().enabled = true;
         
     }
-    //Verifica se  a vida é igual a zero e chama o respawn com velocidade zerada
+    
     void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("Asteroid"))
+        if (collision.CompareTag("Asteroid") || collision.CompareTag("Enemy") || collision.CompareTag("BulletEnemy"))
         {
             life--;
             lifeText.text = "Vidas" + life;
-        }
-        if (collision.CompareTag("Ammunition"))
-        {
-            Destroy(collision.gameObject);    
-            while (ammunitioncount <= 10)
+
+            if (life <= 0)
             {
-                for (int i = 0; i <= 5; i++)
-                    ammunitioncount++;
-                    ammunitioncountText.text = "Balas" + ammunitioncount;
+                GetComponent<SpritRenderer>().enabled = false;
+                GetComponent<Collider2D>().enabled = false;
+                Invoke("Respawn", 2f);
             }
         }
 
-        if (life == 0) { 
+        else (collision.CompareTag("Ammunition"))
+        {
+            Destroy(collision.gameObject);
+            if (ammunitioncount <= 5)
+            {
+                ammunitioncount = ammunitioncount + 5;
+                ammunitioncountText.text = "Balas" + ammunitioncount;
+            }
+            else if (ammunitioncount == 6)
+            {
+                ammunitioncount = ammunitioncount + 4;
+                ammunitioncountText.text = "Balas" + ammunitioncount;
+            }
+            else if (ammunitioncount == 7)
+            {
+                ammunitioncount = ammunitioncount + 3;
+                ammunitioncountText.text = "Balas" + ammunitioncount;
+            }
+            else if (ammunitioncount == 8)
+            {
+                ammunitioncount = ammunitioncount + 2;
+                ammunitioncountText.text = "Balas" + ammunitioncount;
+            }
+            else if (ammunitioncount == 9)
+            {
+                ammunitioncount = ammunitioncount + 1;
+                ammunitioncountText.text = "Balas" + ammunitioncount;
+            }
             
-            GetComponent<SpritRenderer>().enabled = false;
-            GetComponent<Collider2D>().enabled = false;
-            Invoke("Respawn", 2f);
-    }   
+            else
+                ammunitioncountText.text = "Balas" + ammunitioncount;
+        }  
     }
 
     // Inicializo limites definidos pela visão da camera no universo.

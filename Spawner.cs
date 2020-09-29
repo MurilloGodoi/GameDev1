@@ -12,25 +12,28 @@ public class Spawner : MonoBehaviour
     float bottomLimit = -5f;
     float topLimit = 5f;
     float rightLimit = 6.5f;
-    public float speed = 8f;
-    public float countdown = 5.0f;
+    
 
 
     void Start()
     {
-        
+        CreateNewAmmunition();
+        CreateNewAsteroid();
     }
  
     void Update()
     {
+        float countdown = 8.0f;
+
         countdown -= Time.deltaTime;
         if (countdown <= 0.0f)
         {
             CreateNewAmmunition();
             CreateNewAsteroid();
+           
         }
     }
-    }
+    
 
     void CreateNewAsteroid()
     {
@@ -51,11 +54,9 @@ public class Spawner : MonoBehaviour
     
     void CreateNewAmmunition()
     {
-        int randomIndex = Random.Range(0, ammunition.Length);
-
     // posição (Vector3 (x, y, z)) aleatória
         Vector3 newPos = new Vector3(Random.Range(leftLimit, rightLimit), Random.Range(bottomLimit, topLimit), 0f);
         GameObject ammunition = Instantiate(ammunition[randomIndex], newPos, transform.rotation);
-}
+    }
     
 }
