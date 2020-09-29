@@ -1,7 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Globalization;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ShipController : MonoBehaviour
 {
@@ -16,6 +18,9 @@ public class ShipController : MonoBehaviour
     int ammunitioncount = 10;
     int life = 3; // qde de vida
     Rigidbody2D rb2d; // referencia da componente Rigidbody2D
+    public GameObject player;
+    public Text lifeText;
+    public Text ammunitioncountText
 
     Camera cam; // Camera principal do jogo
     Vector2 rightTopLim; // limite superior direito da camera
@@ -27,12 +32,15 @@ public class ShipController : MonoBehaviour
         rb2d = GetComponent<Rigidbody2D>();
         cam = Camera.main;
         InitCamValues();
+        lifeText.text = "Vidas" + life;
+        ammunitioncountText.text = "Balas" + ammunitioncount;
     }
 
     // Executa uma unica vez em todos os quadros. Sincronizado com a atualização de quadros.
     void Update()
     {
         CheckCamLimits();
+        player.SendMessage(ammunitioncount);
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
@@ -41,6 +49,7 @@ public class ShipController : MonoBehaviour
                 GameObject bulletGo = Instantiate(bulletPrefab, fireSpotTrans.position, fireSpotTrans.rotation);
                 bulletGo.tag = gameObject.tag;
                 ammunitioncount--;
+                ammunitioncountText.text = "Balas" + ammunitioncount;
             }
         }
     }
@@ -76,6 +85,7 @@ public class ShipController : MonoBehaviour
         if (collision.CompareTag("Asteroid"))
         {
             life--;
+            lifeText.text = "Vidas" + life;
         }
         if (collision.CompareTag("Ammunition"))
         {
@@ -84,6 +94,7 @@ public class ShipController : MonoBehaviour
             {
                 for (int i = 0; i <= 5; i++)
                     ammunitioncount++;
+                    ammunitioncountText.text = "Balas" + ammunitioncount;
             }
         }
 
